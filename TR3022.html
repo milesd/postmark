@@ -1,0 +1,636 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0097)https://web.archive.org/web/20031219114114/http://www.netapp.com/tech_library/3022.html?fmt=print -->
+<html lang="en-US" style="--wm-toolbar-height: 284px;">
+  <head>
+  <title>PostMark: A New File System Benchmark</title>
+</head>
+
+<h1>PostMark: A New File System Benchmark</h1>
+<div class="naSecText"><b>TR3022</b> by <a href="https://web.archive.org/web/20031219114114/mailto:katcher@netapp.com">Jeffrey Katcher</a></div><br><br>
+<div class="naSecText">
+
+<ul>
+<li><a href="#section1">Introduction</a>
+</li><li><a href="#section2">The Real World</a>
+</li><li><a href="#section3">The Benchmark Software</a>
+</li><li><a href="#section4">Configuration and Usage</a>
+</li><li><a href="#section5">The Results</a>
+</li><li><a href="#section6">Future Directions</a>
+</li><li><a href="#section7">Summary</a>
+<br><br>
+</li><li><a href="https://web.archive.org/web/20031219114114/http://www.netapp.com/tech_library/postmark.html">Source code for PostMark</a>
+</li></ul>
+
+
+<h3>Preface to the Reader</h3>
+
+  Network Appliance continues to evolve its technology and products
+  at a fast pace, with significant new features and performance
+  enhancements introduced every nine months or less over the past
+  three years. This paper reflects the nomenclature and product
+  characteristics at the time of publication. In particular,
+  current <a href="https://web.archive.org/web/20031219114114/http://www.netapp.com/products/filer/">NetApp filers</a> supersede the model numbers 
+  referenced in this paper. 
+  
+<a name="abstract"></a>
+<h3>Abstract</h3>
+Existing file system benchmarks are deficient in portraying performance in the ephemeral small-file regime
+used by Internet software, especially:
+<ul>
+<li>  electronic mail;
+</li><li>  netnews; and
+</li><li>  web-based commerce.
+</li></ul>
+PostMark is a new benchmark to measure performance for this class of application.
+<p>
+In this paper, PostMark test results are presented and analyzed for both UNIX and Windows NT
+application servers. Network Appliance Filers (file server appliances) are shown to provide superior
+performance (via NFS or CIFS) compared to local disk alternatives, especially at higher loads. Such results
+
+are consistent with reports from ISPs (Internet Service Providers) who have deployed NetApp filers to
+support such applications on a large scale.
+
+<a name="section1"></a>
+</p><h3>I. Introduction</h3>
+
+Although a panoply of file system benchmarks currently exists, most emphasize raw throughput or
+performance on large, relatively long-lived groups of files.  Current file servers provide services such as
+electronic mail, netnews, and commerce service, which depend on enormous numbers of relatively short-
+lived files.  These systems are inherited from an era predating the exponential growth of the Internet and
+were never envisioned as being scaleable to today's required levels.
+<p>
+When planning the acquisition and growth of networked storage systems, it is difficult to predict the
+performance for Internet duties from existing benchmarks. The only recourse is to measure the
+performance under the load of electronic mail and netnews services.  As using production systems for
+performance evaluation is both resource intensive and non-deterministic (the load is varied and seldom
+reproducible), PostMark was created to simulate heavy small-file system loads with a minimal amount of
+software and configuration effort and to provide complete reproducibility.
+
+<a name="section2"></a>
+</p><h3>II. The Real World</h3>
+
+Analysis of file servers running electronic mail (especially the Simple Mail Transfer Protocol that is nearly
+universal on the Internet) and netnews shows a strong dependency on an enormous (from over 100,000 into
+the millions) number of files.  Not only are these files relatively small (from one kilobyte to over one
+hundred kilobytes, depending on content), they are constantly in flux.  At any given time, files are being
+rapidly created, read, written, or deleted, all over the disk drives allocated for these tasks.  Small files that
+continually change are outside the design parameters for most file systems, and perform especially poorly
+under the UFS file system common to many Unix operating systems.
+
+<a name="section3"></a>
+<h3>III. The Benchmark Software</h3>
+PostMark was designed to create a large pool of continually changing files and to measure the transaction
+rates for a workload approximating a large Internet electronic mail server.
+<p>
+PostMark generates an initial pool of random text files ranging in size from a configurable low bound to a
+configurable high bound.  This file pool is of configurable size and can be located on any accessible file
+system.
+</p><p>
+Once the pool has been created (also producing statistics on continuous small file creation performance), a
+specified number of transactions occurs.  Each transaction consists of a pair of smaller transactions:
+</p><ul>
+<li>Create file or Delete file
+</li><li>Read file or Append file
+</li></ul>
+
+The incidence of each transaction type and its affected files are chosen randomly to minimize the influence
+of file system caching, file read ahead, and disk level caching and track buffering.  This incidence can be
+tuned by setting either the read or create bias parameters to produce the desired results.
+<p>
+When a file is created, a random initial length is selected, and text from a random pool is appended up to
+the chosen length.  File deletion selects a random file from the list of active files and deletes it.
+</p><p>
+When a file is to be read, a randomly selected file is opened, and the entire file is read (using a configured
+block size) into memory.  Either buffered or raw library routines may be used, allowing existing software
+to be approximated if desired.
+</p><p>
+Appending data to a file opens a random file, seeks to its current end, and writes a random amount of data.
+This value is chosen to be less than the configured file size high bound.  If the file is already at the
+maximum size, no further data will appended.
+</p><p>
+When all of  the transactions have completed, the remaining active files are all deleted (also producing
+statistics on continuous file deletion).
+</p><p>
+On completion of each run, a report is generated showing:
+</p><ul>
+<li>  Elapsed time
+</li><li>  Elapsed time spent performing transactions and average transaction rate (files/second)
+</li><li>  Total number of files created and average creation rate (files/second)
+</li><li>  Number of files created initially and average creation rate (files/second)
+</li><li>  Number of files created during sequence of transactions and average creation rate (files/second)
+</li><li>  Total number of files read and average rate (files/second)
+</li><li>  Total number of files appended and average rate (files/second)
+</li><li>  Total number of files deleted and average deletion rate (files/second)
+</li><li>  Number of files deleted after transactions were complete and average deletion rate (files/second)
+</li><li>  Number of files deleted during sequence of transactions and average deletion rate (files/second)
+</li><li>  Total size of data read and average input rate (bytes/second)
+</li><li>  Total size of data written and average output rate (bytes/second)
+</li></ul>
+
+A portable random number generator (derived from the Unix reference implementation) is included in the
+PostMark distribution ensuring identical initial conditions across different platforms and operating systems.
+<p>
+PostMark currently operates  under Unix (Sun Microsystems Solaris 1 and Solaris 2, Digital Unix) and
+Microsoft Win32 environments.
+
+<a name="section4"></a>
+</p><h3>IV. Configuration and Usage</h3>
+
+PostMark is operated from a command line interface, even in the Win32 environment.  A configuration file
+(specified at the command line) may contain a list of commands to be run immediately.  When run, the
+program identifies itself and presents its command prompt:
+<p>
+
+<tt>
+PostMark v1.00 : 8/11/97<br>
+pm&gt;
+</tt>
+
+</p><p>
+At the command prompt, a summary of commands is available:
+</p><p>
+
+<tt>
+pm&gt; ?<br>
+set size - Sets low and high bounds of files<br>
+set number - Sets number of simultaneous files<br>
+set seed - Sets seed for random number generator<br>
+set transactions - Sets number of transactions<br>
+set location - Sets location of working files<br>
+set read - Sets read block size<br>
+set write - Sets write block size<br>
+set buffering - Sets usage of buffered I/O<br>
+set bias read - Sets the chance of choosing read over append<br>
+set bias create - Sets the chance of choosing create over delete<br>
+run - Runs one iteration of benchmark<br>
+show - Displays current configuration<br>
+help - Prints out available commands<br>
+quit - Exit program<br>
+pm&gt;<br>
+
+</tt>
+</p><p>
+The "show" command displays the current configuration that will be used on the next run.  Displayed
+below is the system default configuration:
+</p>
+
+<pre><font size="-1">pm&gt;show
+Current configuration is:
+Transactions: 500
+Files range between 500 bytes and 9.77 kilobytes in size
+Random number generator seed is 42
+The base number of files is 500
+The working directory is: .
+Block sizes are: read=512 bytes, write=512 bytes
+Biases are: read/append=5, create/delete=5
+Using Unix buffered file I/O
+pm&gt;
+
+</font>
+</pre><font size="-1" face="ARIAL, HELVETICA">
+
+If this configuration is run:
+<ul>
+<li>  500 files will be initially created, between .. and 10 Kilobytes in size
+</li><li>  The files will be processed in the current directory
+</li><li>  All reads will occur in 512 byte blocks
+</li><li>  All writes will occur in 512 byte blocks
+</li><li>  Reads and appends are equally likely to occur
+</li><li>  Creates and deletes are equally likely to occur
+</li><li>  File operations will be performed using the standard buffered I/O in the runtime library
+</li></ul>
+
+The "set size" command allows the file range to be specified.
+<p>
+<tt>
+pm&gt; set size 10000 20000
+</tt>
+</p><p>
+This example allows files to be created from 10,000 to 20,000 bytes in length.  Providing only one number
+will force all files to be created at the specified length.
+</p><p>
+The "set number" command sets the number of files to be initially created before the transactions begin.
+Any integer greater than one is accepted, but the file system must have space for the resulting files.
+</p><p>
+The "set seed" command sets the initialization value for the random number generator.  This should seldom
+need to be set as the results will then differ from previous runs.  Any integer value is acceptable as input.
+</p><p>
+The "set transactions" command specifies the number of create/delete and read/append transactions that
+will occur during the next run.  Any integer value greater than one is acceptable.
+</p><p>
+The "set location" command specifies the working directory for the files produced during a program run.
+</p><p>
+<tt>
+pm&gt; set location /usr2/tmp
+</tt>
+</p><p>
+The "set read" and "set write" commands specify how much data is read or written to files at a time.  An
+integer value greater than one is required and should be less than the maximum file size.
+</p><p>
+The "set buffering" command specifies whether buffered stdio function calls should be used instead of the
+lower level raw system calls.  The valid parameters are "true" and "false" and default to true (buffering is
+enabled).
+</p><p>
+The "set bias read" and "set bias create" commands allow the user to select how often an operation occurs
+while transactions are selected.  The allowed values range from -1,0 to 10.
+</p><p>
+For "set bias read" -1 disables all read and append operations.   Otherwise,  when the value is lower,
+append is much more likely to occur.  When it is higher, read is more likely.  The default value of 5 allows
+the chances to be equal.
+</p><p>
+For "set bias create" -1 disables all create and delete operations.   Otherwise,  when the value is lower,
+delete is much more likely to occur.  When it is higher, create is more likely.  The default value of 5 allows
+the chances to be equal.
+</p><p>
+The "run" command starts a program run using the current configuration.  After the initial files are created,
+periods are printed to show transaction progress.  When ten are printed, all transactions are complete and
+the remaining files will be deleted.  Afterwards, the results will be printed:
+</p></font>
+
+<pre><font size="-1">pm&gt;run
+Creating files...Done
+Performing transactions..........Done
+Deleting files...Done
+Time:
+        41 seconds total
+        17 seconds of transactions (29 per second)
+
+Files:
+        740 created (18 per second)
+                Creation alone: 500 files (41 per second)
+                Mixed with transactions: 240 files (14 per second)
+        237 read (13 per second)
+        262 appended (15 per second)
+        740 deleted (18 per second)
+                Deletion alone: 480 files (40 per second)
+                Mixed with transactions: 260 files (15 per second)
+
+Data:
+        1.31 megabytes read (31.86 kilobytes per second)
+        4.20 megabytes written (102.49 kilobytes per second)
+pm&gt;
+
+</font>
+</pre>
+Large numbers should be selected for the initial file pool to provide a realistic working set and to prevent
+caching effects from hiding performance deficiencies.   Baseline results were obtained at the 1,000 and
+20,000 file levels.  The number of transactions should also be large (10,000+) to allow the system to attain
+a state of equilibrium.
+
+<a name="section5"></a>
+<h3>V. The Results</h3>
+
+PostMark has been run on a variety of system and storage configurations, both attached and networked.
+Both Network File System (NFS) and Microsoft CIFS remote storage access protocols were used as
+necessary.
+<p>
+PostMark was configured in three different ways:
+</p><ul>
+<li>  1000 initial files and 50000 transactions
+</li><li>  20000 initial files and 50000 transactions
+</li><li>  20000 initial files and 100000 transactions
+</li></ul>
+All other PostMark parameters were left constant at the default values.
+<p>
+The NFS benchmark was performed on a Sun Microsystems Ultra 1/170 with 256 Mbytes RAM running
+under the Solaris 2.5 operating  system.  The following configurations were tested:
+</p><ul>
+<li>  UFS - The Solaris standard Unix File System (derived from the Berkeley Fast File System)
+</li><li>  TMPFS - A memory-based temporary file system operating in buffer cache (no persistent files, but
+included to show hardware capabilities without disk bottlenecks)
+</li><li>  ODS/R0 - A software disk array (Sun Online Disk Suite) providing only striping
+</li><li>  ODS/R5 - A software disk array providing parity and striping across the pool of disk drives (RAID5)
+</li><li>  NFS/F330 - NFS to Network Appliance F330 over 100 Mbit/s CDDI (WAFL/RAID4)
+</li><li>  NFS/F630 - NFS to Network Appliance F630 over 100 Mbit/s CDDI (WAFL/RAID4)
+</li></ul>
+
+<table border="1" cellpadding="3" align="DEFAULT" width="600">
+<tbody><tr>
+<td align="LEFT" valign="TOP">
+<b>1000/50000</b>
+</td>
+<td align="LEFT" valign="TOP"><b>UFS</b></td>
+<td align="LEFT" valign="TOP"><b>TMPFS</b></td>
+<td align="LEFT" valign="TOP"><b>ODS/R0</b></td>
+<td align="LEFT" valign="TOP"><b>ODS/R5</b></td>
+<td align="LEFT" valign="TOP"><b>NFS/F330</b></td>
+<td align="LEFT" valign="TOP"><b>NFS/F630</b></td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">
+Transactions per second
+</td>
+<td align="LEFT" valign="TOP">36</td>
+<td align="LEFT" valign="TOP">2000</td>
+<td align="LEFT" valign="TOP">63</td>
+<td align="LEFT" valign="TOP">23</td>
+<td align="LEFT" valign="TOP">139</td>
+<td align="LEFT" valign="TOP">253</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">
+Data read (Kbytes/sec)
+</td>
+<td align="LEFT" valign="TOP">115.67</td>
+<td align="LEFT" valign="TOP">4880</td>
+<td align="LEFT" valign="TOP">199.73</td>
+<td align="LEFT" valign="TOP">74.13</td>
+<td align="LEFT" valign="TOP">441.71</td>
+<td align="LEFT" valign="TOP">799.91</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">
+Data written (Kbytes/sec)
+</td>
+<td align="LEFT" valign="TOP">118.27</td>
+<td align="LEFT" valign="TOP">7330</td>
+<td align="LEFT" valign="TOP">204.22</td>
+<td align="LEFT" valign="TOP">75.79</td>
+<td align="LEFT" valign="TOP">451.64</td>
+<td align="LEFT" valign="TOP">817.89</td>
+</tr>
+</tbody></table>
+<br>
+<b>Table 1:</b> PostMark Results for Unix and NFS (1,000 initial files and 50,000 transactions)
+
+<p><br>
+
+<table border="1" cellpadding="3" align="DEFAULT" width="600">
+<tbody><tr>
+<td align="LEFT" valign="TOP"><b>20000/50000</b></td>
+<td align="LEFT" valign="TOP"><b>UFS</b></td>
+<td align="LEFT" valign="TOP"><b>TMPFS</b></td>
+<td align="LEFT" valign="TOP"><b>ODS/R0</b></td>
+<td align="LEFT" valign="TOP"><b>ODS/R5</b></td>
+<td align="LEFT" valign="TOP"><b>NFS/F330</b></td>
+<td align="LEFT" valign="TOP"><b>NFS/F630</b></td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Transactions per second</td>
+<td align="LEFT" valign="TOP">15</td>
+<td align="LEFT" valign="TOP">438</td>
+<td align="LEFT" valign="TOP">29</td>
+<td align="LEFT" valign="TOP">14</td>
+<td align="LEFT" valign="TOP">76</td>
+<td align="LEFT" valign="TOP">176</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data read (Kbytes/sec)</td>
+<td align="LEFT" valign="TOP">29.93</td>
+<td align="LEFT" valign="TOP">663.64</td>
+<td align="LEFT" valign="TOP">56.60</td>
+<td align="LEFT" valign="TOP">27.05</td>
+<td align="LEFT" valign="TOP">177.68</td>
+<td align="LEFT" valign="TOP">383.41</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data written (Kbytes/sec)
+</td>
+<td align="LEFT" valign="TOP">54.22</td>
+<td align="LEFT" valign="TOP">1530</td>
+<td align="LEFT" valign="TOP">102.54</td>
+<td align="LEFT" valign="TOP">49.00</td>
+<td align="LEFT" valign="TOP">321.88</td>
+<td align="LEFT" valign="TOP">694.58</td>
+</tr>
+</tbody></table>
+<br>
+<b>Table 2:</b> PostMark Results for Unix and NFS (20,000 initial files and 50,000 transactions)
+</p><p><br>
+
+<table border="1" cellpadding="3" align="DEFAULT" width="600">
+<tbody><tr>
+<td align="LEFT" valign="TOP">
+<p><b>20000/100000</b></p>
+</td>
+<td align="LEFT" valign="TOP"><b>TMPFS</b></td>
+<td align="LEFT" valign="TOP"><b>ODS/R0</b></td>
+<td align="LEFT" valign="TOP"><b>ODS/R5</b></td>
+<td align="LEFT" valign="TOP"><b>NFS/F330</b></td>
+<td align="LEFT" valign="TOP"><b>NFS/F630</b></td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Transactions per second</td>
+<td align="LEFT" valign="TOP">335</td>
+<td align="LEFT" valign="TOP">30</td>
+<td align="LEFT" valign="TOP">14</td>
+<td align="LEFT" valign="TOP">74</td>
+<td align="LEFT" valign="TOP">169</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data read (Kbytes/sec)</td>
+<td align="LEFT" valign="TOP">613.03</td>
+<td align="LEFT" valign="TOP">73.19</td>
+<td align="LEFT" valign="TOP">35.05</td>
+<td align="LEFT" valign="TOP">204.72</td>
+<td align="LEFT" valign="TOP">446.69</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data written (Kbytes/sec)
+
+</td>
+<td align="LEFT" valign="TOP">1160</td>
+<td align="LEFT" valign="TOP">101.17</td>
+<td align="LEFT" valign="TOP">48.46</td>
+<td align="LEFT" valign="TOP">282.98</td>
+<td align="LEFT" valign="TOP">617.45</td>
+</tr>
+</tbody></table>
+<br>
+<b>Table 3:</b> PostMark Results for Unix and NFS (20,000 initial files and 100,000 transactions)
+</p><p><br>
+
+The results demonstrate that UFS is an extremely poor performer in the PostMark application domain, and
+degrading even more under heavy load.  When software-based disk array solutions are tested (still using
+UFS as a file system), performance is improved in a striped environment, but RAID5 is worse than the
+standard UFS configuration.  NFS performance with NetApp filers, however, ranges from four times to
+nearly an order of magnitude better than the baseline configuration, demonstrating the applicability of
+network attached storage to this class of solution. TMPFS provides the best overall performance, but as it is
+effectively a RAM-disk solution, it is not a practical alternative for large-scale deployment.
+
+</p><p>
+
+The CIFS benchmark was performed on a Compaq ProLiant 5000 equipped with a 200 MHz Pentium Pro,
+128 Mbytes RAM, and the Compaq SMART-2 Disk Array Controller.  The system was running the
+Microsoft Windows NT 4.0 operating system. The following configurations were tested:
+</p><ul>
+<li>  FAT - The basic Microsoft file system inherited from DOS
+</li><li>  NTFS/R0 - Microsoft NTFS on a striped volume managed by the Compaq Disk Array Controller
+</li><li>  NTFS/R5 - NTFS on a parity/striped (RAID5) volume managed by the Compaq Disk Array Controller
+</li><li>  CIFS/F330 - CIFS to Network Appliance F330 over 100 Mbit/s Fast Ethernet (WAFL/RAID4)
+</li><li>  CIFS/F630 - CIFS to Network Appliance F630 over 100 Mbit/s Fast Ethernet (WAFL/RAID4)
+</li></ul>
+
+<table border="1" cellpadding="3" align="DEFAULT" width="600">
+<tbody><tr>
+<td align="LEFT" valign="TOP">
+<p><b>1000/50000</b></p>
+</td>
+<td align="LEFT" valign="TOP"><b>FAT</b></td>
+<td align="LEFT" valign="TOP"><b>NTFS/R0</b></td>
+<td align="LEFT" valign="TOP"><b>NTFS/R5</b></td>
+<td align="LEFT" valign="TOP"><b>CIFS/F330</b></td>
+<td align="LEFT" valign="TOP"><b>CIFS/F630</b></td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Transactions per second</td>
+<td align="LEFT" valign="TOP">212</td>
+<td align="LEFT" valign="TOP">245</td>
+<td align="LEFT" valign="TOP">144</td>
+<td align="LEFT" valign="TOP">135</td>
+<td align="LEFT" valign="TOP">166</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data read (Kbytes/sec)</td>
+<td align="LEFT" valign="TOP">675.55</td>
+<td align="LEFT" valign="TOP">776.42</td>
+<td align="LEFT" valign="TOP">451.63</td>
+<td align="LEFT" valign="TOP">427.61</td>
+<td align="LEFT" valign="TOP">522.02</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data written (Kbytes/sec)
+
+</td>
+<td align="LEFT" valign="TOP">690.74</td>
+<td align="LEFT" valign="TOP">794.18</td>
+<td align="LEFT" valign="TOP">461.79</td>
+<td align="LEFT" valign="TOP">437.22</td>
+<td align="LEFT" valign="TOP">533.75</td>
+</tr>
+</tbody></table>
+<br>
+<b>Table 4:</b> PostMark Results for Windows and CIFS (1,000 initial files and 50,000 transactions)
+
+<p><br>
+
+
+<table border="1" cellpadding="3" align="DEFAULT" width="600">
+<tbody><tr>
+<td align="LEFT" valign="TOP">
+<p><b>20000/50000</b></p>
+</td>
+
+<td align="LEFT" valign="TOP"><b>NTFS/R0</b></td>
+<td align="LEFT" valign="TOP"><b>NTFS/R5</b></td>
+<td align="LEFT" valign="TOP"><b>CIFS/F330</b></td>
+<td align="LEFT" valign="TOP"><b>CIFS/F630</b></td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Transactions per second</td>
+<td align="LEFT" valign="TOP">69</td>
+<td align="LEFT" valign="TOP">37</td>
+<td align="LEFT" valign="TOP">66</td>
+<td align="LEFT" valign="TOP">139</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data read (Kbytes/sec)</td>
+<td align="LEFT" valign="TOP">168.24</td>
+<td align="LEFT" valign="TOP">90.61</td>
+<td align="LEFT" valign="TOP">143.83</td>
+<td align="LEFT" valign="TOP">275.94</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data written (Kbytes/sec)
+
+</td>
+<td align="LEFT" valign="TOP">304.78</td>
+<td align="LEFT" valign="TOP">164.14</td>
+<td align="LEFT" valign="TOP">260.55</td>
+<td align="LEFT" valign="TOP">499.89</td>
+</tr>
+</tbody></table>
+<br>
+<b>Table 5:</b> PostMark Results for Windows and CIFS (20,000 initial files and 50,000 transactions)
+
+</p><p><br>
+
+<table border="1" cellpadding="3" align="DEFAULT" width="600">
+<tbody><tr>
+<td align="LEFT" valign="TOP">
+<p><b>20000/100000</b></p>
+</td>
+
+<td align="LEFT" valign="TOP"><b>NTFS/R0</b></td>
+<td align="LEFT" valign="TOP"><b>NTFS/R5</b></td>
+<td align="LEFT" valign="TOP"><b>CIFS/F330</b></td>
+<td align="LEFT" valign="TOP"><b>CIFS/F630</b></td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Transactions per second</td>
+<td align="LEFT" valign="TOP">41</td>
+<td align="LEFT" valign="TOP">36</td>
+<td align="LEFT" valign="TOP">68</td>
+<td align="LEFT" valign="TOP">141</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data read (Kbytes/sec)</td>
+<td align="LEFT" valign="TOP">179.88</td>
+<td align="LEFT" valign="TOP">101.14</td>
+<td align="LEFT" valign="TOP">178.21</td>
+<td align="LEFT" valign="TOP">350.31</td>
+</tr>
+<tr>
+<td align="LEFT" valign="TOP">Data written (Kbytes/sec)
+
+</td>
+<td align="LEFT" valign="TOP">248.64</td>
+<td align="LEFT" valign="TOP">139.81</td>
+<td align="LEFT" valign="TOP">246.33</td>
+<td align="LEFT" valign="TOP">484.23</td>
+</tr>
+</tbody></table>
+<br>
+<b>Table 6:</b> PostMark Results for Windows and CIFS (20,000 initial files and 100,000 transactions)
+
+</p><p>
+In the Microsoft Windows NT environment, local disk drives show superior performance to network
+attached storage for smaller numbers of active files.  Under heavier loads, both FAT and NTFS volumes
+(despite the dedicated hardware support provided by the Compaq SMART-2 Disk Array Controller)
+degrade at a faster rate than even UFS. The NetApp filers, providing network-attached storage via the CIFS
+protocol, maintain a much more constant level of performance, allowing a superior quality of service even
+at the heaviest measured workloads.
+
+<a name="section6"></a>
+</p><h3>VI. Future Directions</h3>
+
+PostMark generates its workloads by originating as many sequential operations as it can within a specified
+time limit.  While providing useful results from this workload, PostMark could be extended to provide:
+<ul>
+<li>  Multiple writers/single reader
+</li><li>  Single writer/multiple reader
+</li><li>  Multiple writers/multiple readers
+</li></ul>
+These additions would allow flexible simulation of many possible disk intensive workloads in addition to
+the existing PostMark model.
+
+<a name="section7"></a>
+<h3>VII. Summary</h3>
+
+The SPEC SFS benchmark has inspired improvements in NFS file servers offered by a wide variety of
+vendors, and a similar effect is possible with PostMark. Using the PostMark benchmark to highlight
+performance bottlenecks triggered by ISP workloads, server vendors (including NetApp) can enhance the
+performance of their products in the ISP context.
+<p>
+The PostMark results presented in this paper confirm the experiences reported by ISPs (Internet Service
+Providers), where large-scale loads require the greatest possible performance from every file system. At
+numerous first-tier ISPs worldwide, NetApp filers have been deployed to address these large and growing
+requirements for maximum performance without compromising reliability.
+
+
+</p></div>
+
+<!-- main content end -->
+
+<br>
+<font face="ARIAL, HELVETICA" size="-2">
+� 2003 Network Appliance, Inc.<br>
+All rights reserved. <br>
+Specifications subject to change without notice. 
+<br><br>
+NetApp, the Network Appliance logo, FAServer, FilerView, NearStore, NetCache, SecureShare, SnapManager, SnapMirror, SnapRestore, and WAFL are registered trademarks and Network Appliance, ApplianceWatch, BareMetal, Camera-to-Viewer, Center-to-Edge, ContentDirector, ContentFabric, ContentReporter, DataFabric, Data ONTAP, EdgeFiler, HyperSAN, InfoFabric, MultiStore, NetApp Availability Assurance, NetApp ProTech Expert, NOW, NOW (NetApp on the Web), RoboCache, RoboFiler, SecureAdmin, Serving Data by Design, Smart SAN, SnapCache, SnapCopy, SnapDirector, SnapDrive, SnapFilter, SnapMigrator, Snapshot, SnapSuite, SnapVault, SohoCache, SohoFiler, The evolution of storage, Vfiler, and Web Filer are trademarks of Network Appliance, Inc. in the U.S. and other countries. All other brands or products are trademarks or registered trademarks of their respective holders and should be treated as such.
+</font>
+<br>
+<br>
+
+</body></html>
