@@ -60,7 +60,7 @@ Versions:
 #include <time.h>
 #include <fcntl.h>
 
-#define PM_VERSION "v1.51 : 8/14/01"
+#define PM_VERSION "v1.53 : 5/31/2005"
 
 #ifdef _WIN32
 #include <io.h>
