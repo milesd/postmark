@@ -1,5 +1,5 @@
 MAIN = postmark
-SRCS = postmark-1.53.c
+SRCS = postmark.c
 DOCS = postmark.html
 CFLAGS = -O2 -g 
 CFLAGS += -Wno-format -Wno-parentheses -Wno-deprecated-non-prototype -Wno-implicit-int -Wno-implicit-function-declaration
