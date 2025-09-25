@@ -5,6 +5,7 @@ PostMark
 [SYNOPSIS](#SYNOPSIS)\
 [DESCRIPTION](#DESCRIPTION)\
 [COMMANDS](#COMMANDS)\
+[NOTES](#NOTES)\
 [AUTHOR](#AUTHOR)
 
 * * * * *
@@ -36,78 +37,82 @@ The following **postmark** commands are available, either interactively or by 
 
 **set size**
 
-Sets low and high bounds of files
+&nbsp;&nbsp;&nbsp;&nbsp;Sets low and high bounds of files
 
 **set number**
 
-Sets number of simultaneous files
+&nbsp;&nbsp;&nbsp;&nbsp;Sets number of simultaneous files
 
 **set seed**
 
-Sets seed for random number generator
+&nbsp;&nbsp;&nbsp;&nbsp;Sets seed for random number generator
 
 **set transactions**
 
-Sets number of transactions
+&nbsp;&nbsp;&nbsp;&nbsp;Sets number of transactions
 
 **set location**
 
-Sets location of working files
+&nbsp;&nbsp;&nbsp;&nbsp;Sets location of working files
 
 **set subdirectories**
 
-Sets number of subdirectories
+&nbsp;&nbsp;&nbsp;&nbsp;Sets number of subdirectories
 
 **set read**
 
-Sets read block size
+&nbsp;&nbsp;&nbsp;&nbsp;Sets read block size
 
 **set write**
 
-Sets write block size
+&nbsp;&nbsp;&nbsp;&nbsp;Sets write block size
 
 **set buffering**
 
-Sets usage of buffered I/O
+&nbsp;&nbsp;&nbsp;&nbsp;Sets usage of buffered I/O
 
 **set bias read**
 
-Sets the chance of choosing read over append
+&nbsp;&nbsp;&nbsp;&nbsp;Sets the chance of choosing read over append
 
 **set bias create**
 
-Sets the chance of choosing create over delete
+&nbsp;&nbsp;&nbsp;&nbsp;Sets the chance of choosing create over delete
 
 **set report**
 
-Choose verbose or terse report format
+&nbsp;&nbsp;&nbsp;&nbsp;Choose verbose or terse report format
 
 **run**
 
-Runs one iteration of benchmark
+&nbsp;&nbsp;&nbsp;&nbsp;Runs one iteration of benchmark
 
 **load**
 
-Read configuration file
+&nbsp;&nbsp;&nbsp;&nbsp;Read configuration file
 
 **show**
 
-Displays current configuration
+&nbsp;&nbsp;&nbsp;&nbsp;Displays current configuration
 
 **help**
 
-Prints out available commands
+&nbsp;&nbsp;&nbsp;&nbsp;Prints out available commands
 
 **quit**
 
-Exit program
+&nbsp;&nbsp;&nbsp;&nbsp;Exit program
 
+
+NOTES
+-----
+
+From the original [site](https://web.archive.org/web/20031210100218/http://www.netapp.com/tech_library/postmark.html):
 
 > The file [postmark-1_5.c](postmark-1_5.c) contains the source code for the PostMark benchmark, as described in NetApp Technical Report TR-3022, __PostMark: A New File System Benchmark__.
 > 
 > This code has been successfully compiled and run by Network Appliance on various platforms, including Solaris 2 on an Ultra-170, and Windows NT on a Compaq ProLiant. However, the PostMark source code is distributed under the [Artistic License](LICENSE) also included in the source code distribution. As such, no support is provided. However, please report any errors to the author, [Jeffrey Katcher](mailto:katcher@netapp.com), or to [Andy Watson](mailto:watson@netapp.com).
 
-(https://web.archive.org/web/20031210100218/http://www.netapp.com/tech_library/postmark.html)
 
 AUTHORS
 -------
