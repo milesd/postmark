@@ -1,13 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- saved from url=(0097)https://web.archive.org/web/20031219114114/http://www.netapp.com/tech_library/3022.html?fmt=print -->
-<html lang="en-US" style="--wm-toolbar-height: 284px;">
-  <head>
-  <title>PostMark: A New File System Benchmark</title>
-</head>
+<!-- saved from url=(0107)#expand -->
+<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>Network Appliance - PostMark: A New File System Benchmark</title>
+<meta name="keywords" content=" performance, Internet, NetCache, 3022">
+<meta name="description" content=" In this paper, PostMark test results are presented and analyzed for both UNIX and Windows NT application servers. Network Appliance Filers (file server appliances) are shown to provide superior performance (via NFS or CIFS) compared to local disk alternatives, especially at higher loads. Such results are consistent with reports from ISPs (Internet Service Providers) who have deployed NetApp filers to support such applications on a large scale.">
+<link rel="StyleSheet" href="./3022_files/main1_ns6_ie4.css" type="text/css">
 
-<h1>PostMark: A New File System Benchmark</h1>
-<div class="naSecText"><b>TR3022</b> by <a href="https://web.archive.org/web/20031219114114/mailto:katcher@netapp.com">Jeffrey Katcher</a></div><br><br>
+</head><body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" cz-shortcut-listen="true">
+<a name="top"></a>
+
+<br><br>
+<!-- center content table start -->
+<table border="0" cellspacing="0" cellpadding="0" width="680">
+<tbody><tr valign="top">
+<!-- nav/main content space -->
+<td width="15"><img src="./3022_files/spacer-trans.gif" alt="" width="15" height="1" border="0"></td>
+<!-- main content start -->
+<td width="607" class="naSecText" valign="top"> 
+
+ 
+	
+<div class="naSecTitle">PostMark: A New File System Benchmark</div><br>
+<div class="naSecText"><b>TR3022</b> by <a href="mailto:katcher@netapp.com">Jeffrey Katcher</a></div><br><br>
 <div class="naSecText">
+    
 
 <ul>
 <li><a href="#section1">Introduction</a>
@@ -18,10 +33,13 @@
 </li><li><a href="#section6">Future Directions</a>
 </li><li><a href="#section7">Summary</a>
 <br><br>
-</li><li><a href="https://web.archive.org/web/20031219114114/http://www.netapp.com/tech_library/postmark.html">Source code for PostMark</a>
+</li><li><a href="https://web.archive.org/web/20031219114114id_/http://www.netapp.com/tech_library/postmark.html">Source code for PostMark</a>
 </li></ul>
 
-
+<br>
+<b><font size="2">[TR3022]</font></b>
+<hr>
+<br><br>  
 <h3>Preface to the Reader</h3>
 
   Network Appliance continues to evolve its technology and products
@@ -29,7 +47,7 @@
   enhancements introduced every nine months or less over the past
   three years. This paper reflects the nomenclature and product
   characteristics at the time of publication. In particular,
-  current <a href="https://web.archive.org/web/20031219114114/http://www.netapp.com/products/filer/">NetApp filers</a> supersede the model numbers 
+  current <a href="http://www.netapp.com/products/filer/">NetApp filers</a> supersede the model numbers 
   referenced in this paper. 
   
 <a name="abstract"></a>
@@ -172,9 +190,11 @@ pm&gt;<br>
 </p><p>
 The "show" command displays the current configuration that will be used on the next run.  Displayed
 below is the system default configuration:
-</p>
+</p><p>
 
-<pre><font size="-1">pm&gt;show
+
+<font size="-1">
+</font></p><pre><font size="-1">pm&gt;show
 Current configuration is:
 Transactions: 500
 Files range between 500 bytes and 9.77 kilobytes in size
@@ -245,9 +265,27 @@ the chances to be equal.
 The "run" command starts a program run using the current configuration.  After the initial files are created,
 periods are printed to show transaction progress.  When ten are printed, all transactions are complete and
 the remaining files will be deleted.  Afterwards, the results will be printed:
-</p></font>
+</p></font><p><font size="-1" face="ARIAL, HELVETICA">
+</font>
 
-<pre><font size="-1">pm&gt;run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<font size="-1">
+</font></p><pre><font size="-1">pm&gt;run
 Creating files...Done
 Performing transactions..........Done
 Deleting files...Done
@@ -271,7 +309,7 @@ Data:
 pm&gt;
 
 </font>
-</pre>
+</pre><font size="-1" face="ARIAL, HELVETICA">
 Large numbers should be selected for the initial file pool to provide a realistic working set and to prevent
 caching effects from hiding performance deficiencies.   Baseline results were obtained at the 1,000 and
 20,000 file levels.  The number of transactions should also be large (10,000+) to allow the system to attain
@@ -616,12 +654,25 @@ The PostMark results presented in this paper confirm the experiences reported by
 Providers), where large-scale loads require the greatest possible performance from every file system. At
 numerous first-tier ISPs worldwide, NetApp filers have been deployed to address these large and growing
 requirements for maximum performance without compromising reliability.
+<br><br>
+    
 
 
-</p></div>
 
+
+</p></font></div><font size="-1" face="ARIAL, HELVETICA">
+
+<br>
+
+
+<br><img src="./3022_files/spacer-trans.gif" alt="" width="1" height="18" border="0">
+</font></td>
 <!-- main content end -->
-
+<!-- main/ad bar space -->
+<td width="8"><img src="./3022_files/spacer-trans.gif" alt="" width="8" height="1" border="0"></td>
+</tr>
+</tbody></table>
+<!-- center content table end -->
 <br>
 <font face="ARIAL, HELVETICA" size="-2">
 � 2003 Network Appliance, Inc.<br>
@@ -632,5 +683,4 @@ NetApp, the Network Appliance logo, FAServer, FilerView, NearStore, NetCache, Se
 </font>
 <br>
 <br>
-
 </body></html>
