@@ -1,6 +1,6 @@
-.TH "POSTMARK" "1" "2001-09-13" "russell@coker.com.au" "Postmark"
+.TH "POSTMARK" "1" "2001-09-13" "russell@coker.com.au" "PostMark"
 .SH "NAME"
-postmark \- file system benchmark program by NetApp.
+postmark \- a file system benchmark based around small file operations.
 
 .SH "SYNOPSIS"
 .B postmark
@@ -19,7 +19,97 @@ is run it gives a command\-line interface to configure and run tests.  The
 The name of a text file containing commands may be specified on the command
 line.
 .P
-The next version of this man page will have more information.
+The following 
+.B postmark
+commands are available, either interactively or by the specified config file:
+
+.BR set\ size
+.RS
+Sets low and high bounds of files
+
+.RE
+.BR set\ number
+.RS
+Sets number of simultaneous files
+
+.RE
+.BR set\ seed
+.RS
+Sets seed for random number generator
+
+.RE
+.BR set\ transactions
+.RS
+Sets number of transactions
+
+.RE
+.BR set\ location
+.RS
+Sets location of working files
+
+.RE
+.BR set\ subdirectories
+.RS
+Sets number of subdirectories
+
+.RE
+.BR set\ read
+.RS
+Sets read block size
+
+.RE
+.BR set\ write
+.RS
+Sets write block size
+
+.RE
+.BR set\ buffering
+.RS
+Sets usage of buffered I/O
+
+.RE
+.BR set\ bias\ read
+.RS
+Sets the chance of choosing read over append
+
+.RE
+.BR set\ bias\ create
+.RS
+Sets the chance of choosing create over delete
+
+.RE
+.BR set\ report
+.RS
+Choose verbose or terse report format
+
+.RE
+.BR run
+.RS
+Runs one iteration of benchmark
+
+.RE
+.BR load
+.RS
+Read configuration file
+
+.RE
+.BR show
+.RS
+Displays current configuration
+
+.RE
+.BR help
+.RS
+Prints out available commands
+
+.RE
+.BR quit
+.RS
+Exit program
+.RE
+
 .SH "AUTHOR"
+Written by Jeffrey Katcher <katcher@netapp.com> under contract to Network Appliance.
+
 This manual page was written by Russell Coker <russell@coker.com.au>,
 for the Debian GNU/Linux system (but may be used by others).
