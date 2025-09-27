@@ -10,71 +10,18 @@ __postmark__ [config-file]
 
 # DESCRIPTION
 
-[postmark.md](postmark.md) is the man page
-
 **postmark** is a benchmark that's based around small file operations similar to those used on large mail servers and news servers.
 
 When **postmark** is run it gives a command-line interface to configure and run tests. The "help" command displays basic information on how to operate it.
 
 The name of a text file containing commands may be specified on the command line.
 
-COMMANDS
+The man page `postmark.1` is generated from [postmark.md](postmark.md) using [go-md2man](https://github.com/cpuguy83/go-md2man).
 
-The following **postmark** commands are available, either interactively or by the specified config file:
 
-**set** **size**
+# Commands
 
-:   Sets low and high bounds of files
-
-**set number**
-
-:   Sets number of simultaneous files
-
-**set seed**
-
-:   Sets seed for random number generator
-
-**set transactions**
-:   Sets number of transactions
-
-**set location**
-:   Sets location of working files
-
-**set subdirectories**
-:   Sets number of subdirectories
-
-**set read**
-:   Sets read block size
-
-**set write**
-:   Sets write block size
-
-**set buffering**
-:   Sets usage of buffered I/O
-
-**set bias read**
-:   Sets the chance of choosing read over append
-
-**set bias create**
-:   Sets the chance of choosing create over delete
-
-**set report**
-:   Choose verbose or terse report format
-
-**run**
-:   Runs one iteration of benchmark
-
-**load**
-:   Read configuration file
-
-**show**
-:   Displays current configuration
-
-**help**
-:   Prints out available commands
-
-**quit**
-:   Exit program
+The following **postmark** commands are available, either interactively or by the specified config file: See [postmark.md](postmark.md) for details.
 
 
 NOTES
