@@ -52,15 +52,18 @@ Versions:
 1.52 - Fixed error in time base for terse report.  (Thanks to Collin Park)
 
 1.53 - Fixed error in report of deleted files (Thanks to Alf Wachsmann)
+
+1.54 - Enable accurate timing (Andiry Xu)
 */
 
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include <time.h>
 
-#define PM_VERSION "v1.53 : 5/31/2005"
+#define PM_VERSION "v1.54 : 9/27/2025"
 
 #ifdef _WIN32
 #include <direct.h>
@@ -490,49 +493,53 @@ int size; /* number of bytes of junk to create */
 
 /* returns differences in times -
    1 second is the minimum to avoid divide by zero errors */
-time_t diff_time(t1, t0)
-time_t t1;
-time_t t0;
-{
-    return ((t1 -= t0) ? t1 : 1);
+// time_t diff_time(t1,t0)
+// time_t t1;
+// time_t t0;
+//{
+//    return((t1-=t0)?t1:1);
+// }
+
+float diff_time(struct timeval t1, struct timeval t0) {
+    return (t1.tv_sec - t0.tv_sec) + (float)(t1.tv_usec - t0.tv_usec) / 1000000;
 }
 
 /* prints out results from running transactions */
 void verbose_report(fp, end_time, start_time, t_end_time, t_start_time, deleted)
     FILE* fp;
-time_t end_time, start_time, t_end_time, t_start_time; /* timers from run */
-int deleted;                                           /* files deleted back-to-back */
+struct timeval end_time, start_time, t_end_time, t_start_time; /* timers from run */
+int deleted;                                                   /* files deleted back-to-back */
 {
-    time_t elapsed, t_elapsed;
-    int interval;
+    float elapsed, t_elapsed;
+    float interval;
 
     elapsed = diff_time(end_time, start_time);
     t_elapsed = diff_time(t_end_time, t_start_time);
 
     fprintf(fp, "Time:\n");
-    fprintf(fp, "\t%d seconds total\n", elapsed);
-    fprintf(fp, "\t%d seconds of transactions (%d per second)\n", t_elapsed,
+    fprintf(fp, "\t%.4f seconds total\n", elapsed);
+    fprintf(fp, "\t%.4f seconds of transactions (%.2f per second)\n", t_elapsed,
             transactions / t_elapsed);
 
     fprintf(fp, "\nFiles:\n");
-    fprintf(fp, "\t%d created (%d per second)\n", files_created,
+    fprintf(fp, "\t%d created (%.2f per second)\n", files_created,
             files_created / elapsed);
 
     interval = diff_time(t_start_time, start_time);
-    fprintf(fp, "\t\tCreation alone: %d files (%d per second)\n", simultaneous,
+    fprintf(fp, "\t\tCreation alone: %d files (%.2f per second)\n", simultaneous,
             simultaneous / interval);
-    fprintf(fp, "\t\tMixed with transactions: %d files (%d per second)\n",
+    fprintf(fp, "\t\tMixed with transactions: %d files (%.2f per second)\n",
             files_created - simultaneous, (files_created - simultaneous) / t_elapsed);
-    fprintf(fp, "\t%d read (%d per second)\n", files_read, files_read / t_elapsed);
-    fprintf(fp, "\t%d appended (%d per second)\n", files_appended,
+    fprintf(fp, "\t%d read (%.2f per second)\n", files_read, files_read / t_elapsed);
+    fprintf(fp, "\t%d appended (%.2f per second)\n", files_appended,
             files_appended / t_elapsed);
-    fprintf(fp, "\t%d deleted (%d per second)\n", files_deleted,
+    fprintf(fp, "\t%d deleted (%.2f per second)\n", files_deleted,
             files_deleted / elapsed);
 
     interval = diff_time(end_time, t_end_time);
-    fprintf(fp, "\t\tDeletion alone: %d files (%d per second)\n", deleted,
+    fprintf(fp, "\t\tDeletion alone: %d files (%.2f per second)\n", deleted,
             deleted / interval);
-    fprintf(fp, "\t\tMixed with transactions: %d files (%d per second)\n",
+    fprintf(fp, "\t\tMixed with transactions: %d files (%.2f per second)\n",
             files_deleted - deleted, (files_deleted - deleted) / t_elapsed);
 
     fprintf(fp, "\nData:\n");
@@ -544,15 +551,15 @@ int deleted;                                           /* files deleted back-to-
 
 void terse_report(fp, end_time, start_time, t_end_time, t_start_time, deleted)
     FILE* fp;
-time_t end_time, start_time, t_end_time, t_start_time; /* timers from run */
-int deleted;                                           /* files deleted back-to-back */
+struct timeval end_time, start_time, t_end_time, t_start_time; /* timers from run */
+int deleted;                                                   /* files deleted back-to-back */
 {
-    time_t elapsed, t_elapsed;
+    float elapsed, t_elapsed;
 
     elapsed = diff_time(end_time, start_time);
     t_elapsed = diff_time(t_end_time, t_start_time);
 
-    fprintf(fp, "%d %d %.2f ", elapsed, t_elapsed,
+    fprintf(fp, "%.4f %.4f %.2f ", elapsed, t_elapsed,
             (float)transactions / t_elapsed);
     fprintf(fp, "%.2f %.2f %.2f ", (float)files_created / elapsed,
             (float)simultaneous / diff_time(t_start_time, start_time),
@@ -890,9 +897,10 @@ int subdirs;
 int cli_run(param) /* none */
 char* param;       /* unused */
 {
-    time_t start_time, t_start_time, t_end_time, end_time; /* elapsed timers */
-    int delete_base;                                       /* snapshot of deleted files counter */
-    FILE* fp = NULL;                                       /* file descriptor for directing output */
+    struct timeval start_time, t_start_time, t_end_time, end_time; /* elapsed timers */
+    struct timezone tz;
+    int delete_base; /* snapshot of deleted files counter */
+    FILE* fp = NULL; /* file descriptor for directing output */
     int incomplete;
     int i; /* generic iterator */
 
@@ -924,7 +932,7 @@ char* param;       /* unused */
         printf("Done\n");
     }
 
-    time(&start_time); /* store start time */
+    gettimeofday(&start_time, &tz); /* store start time */
 
     /* create files in specified directory until simultaneous number */
     printf("Creating files...");
@@ -935,9 +943,9 @@ char* param;       /* unused */
 
     printf("Performing transactions");
     fflush(stdout);
-    time(&t_start_time);
+    gettimeofday(&t_start_time, &tz); /* store start time */
     incomplete = run_transactions(buffered_io);
-    time(&t_end_time);
+    gettimeofday(&t_end_time, &tz); /* store start time */
     if (!incomplete)
         printf("Done\n");
 
@@ -950,7 +958,7 @@ char* param;       /* unused */
     printf("Done\n");
 
     /* print end time and difference, transaction numbers */
-    time(&end_time);
+    gettimeofday(&end_time, &tz); /* store start time */
 
     /* delete previously created subdirectories */
     if (subdirectories > 1) {
