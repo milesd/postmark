@@ -110,6 +110,8 @@ extern int cli_show();
 extern int cli_help();
 extern int cli_quit();
 
+extern int read_config_file();
+
 cmd command_list[] = {/* table of CLI commands */
                       {"set size", cli_set_size, "Sets low and high bounds of files"},
                       {"set number", cli_set_number, "Sets number of simultaneous files"},
@@ -1139,6 +1141,7 @@ int ignore;     /* ignore file not found */
         printf("Reading configuration from file '%s'\n", filename);
         while (fgets(buffer, MAX_LINE, fp) && result) /* read lines until 'quit' */
         {
+            // Bug - line must end in newline like this
             buffer[strlen(buffer) - 1] = '\0'; /* delete final CR */
             result = cli_parse_line(buffer);   /* process line as typed in */
         }
@@ -1152,7 +1155,8 @@ int ignore;     /* ignore file not found */
 }
 
 /* main function - reads config files then enters get line/parse line loop */
-main(argc, argv) int argc;
+int main(argc, argv)
+int argc;
 char* argv[];
 {
     char buffer[MAX_LINE + 1]; /* storage for input command line */
