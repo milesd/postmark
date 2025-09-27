@@ -1,25 +1,13 @@
-PostMark
-========
-
-[NAME](#NAME)\
-[SYNOPSIS](#SYNOPSIS)\
-[DESCRIPTION](#DESCRIPTION)\
-[COMMANDS](#COMMANDS)\
-[NOTES](#NOTES)\
-[AUTHOR](#AUTHOR)
-
-* * * * *
-
-
-NAME
-----
+## PostMark
 
 **postmark** - a file system benchmark based around small file operations
+
+# MANPAGE
 
 SYNOPSIS
 --------
 
-**postmark** [config-file]
+__postmark__ [config-file]
 
 DESCRIPTION
 -----------
@@ -35,91 +23,72 @@ COMMANDS
 
 The following **postmark** commands are available, either interactively or by the specified config file:
 
-**set size**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets low and high bounds of files
+**set** **size**
+:   Sets low and high bounds of files
 
 **set number**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets number of simultaneous files
+:   Sets number of simultaneous files
 
 **set seed**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets seed for random number generator
+:   Sets seed for random number generator
 
 **set transactions**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets number of transactions
+:   Sets number of transactions
 
 **set location**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets location of working files
+:   Sets location of working files
 
 **set subdirectories**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets number of subdirectories
+:   Sets number of subdirectories
 
 **set read**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets read block size
+:   Sets read block size
 
 **set write**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets write block size
+:   Sets write block size
 
 **set buffering**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets usage of buffered I/O
+:   Sets usage of buffered I/O
 
 **set bias read**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets the chance of choosing read over append
+:   Sets the chance of choosing read over append
 
 **set bias create**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Sets the chance of choosing create over delete
+:   Sets the chance of choosing create over delete
 
 **set report**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Choose verbose or terse report format
+:   Choose verbose or terse report format
 
 **run**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Runs one iteration of benchmark
+:   Runs one iteration of benchmark
 
 **load**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Read configuration file
+:   Read configuration file
 
 **show**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Displays current configuration
+:   Displays current configuration
 
 **help**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Prints out available commands
+:   Prints out available commands
 
 **quit**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Exit program
+:   Exit program
 
 
 NOTES
 -----
 
-From the original [site](https://web.archive.org/web/20031210100218/http://www.netapp.com/tech_library/postmark.html):
+From the original [site](http://www.netapp.com/tech_library/postmark.html):
 
 > The file [postmark-1_5.c](postmark-1_5.c) contains the source code for the PostMark benchmark, as described in NetApp Technical Report TR-3022, __PostMark: A New File System Benchmark__.
 > 
-> This code has been successfully compiled and run by Network Appliance on various platforms, including Solaris 2 on an Ultra-170, and Windows NT on a Compaq ProLiant. However, the PostMark source code is distributed under the [Artistic License](LICENSE) also included in the source code distribution. As such, no support is provided. However, please report any errors to the author, [Jeffrey Katcher](mailto:katcher@netapp.com), or to [Andy Watson](mailto:watson@netapp.com).
+> This code has been successfully compiled and run by Network Appliance on various platforms, including Solaris 2 on an Ultra-170, and Windows NT on a Compaq ProLiant. However, the PostMark source code is distributed under the [Artistic License](LICENSE) also included in the source code distribution. As such, no support is provided. However, please report any errors to the author, [Jeffrey Katcher](katcher@netapp.com), or to [Andy Watson](watson@netapp.com).
 
 
 AUTHORS
 -------
 
-Written by Jeffrey Katcher &lt;katcher@netapp.com&gt; under contract to Network Appliance.
+Written by Jeffrey Katcher (katcher@netapp.com) under contract to Network Appliance.
 
-The manual page was written by Russell Coker &lt;russell@coker.com.au&gt;,
+The manual page was written by Russell Coker (russell@coker.com.au),
 for the Debian GNU/Linux system.
-
-* * * * *
