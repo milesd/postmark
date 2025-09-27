@@ -1,24 +1,22 @@
-MAIN = postmark
-SRCS = postmark-1.53.c
-DOCS = postmark.html
-CFLAGS = -O2 -g 
-CFLAGS += -Wno-format -Wno-parentheses -Wno-deprecated-non-prototype -Wno-implicit-int -Wno-implicit-function-declaration
+TGTS = postmark postmark.1
 
-OBJS = $(SRCS:.c=.o)
+CFLAGS = -O2 -g 
+CFLAGS += -Wno-format -Wno-parentheses -Wno-deprecated-non-prototype  -Wno-implicit-function-declaration
 CC = gcc
 
 .PHONY: clean
 
-all: $(MAIN) $(DOCS) Makefile
+all: $(TGTS)
 
-$(MAIN): $(OBJS) 
-	$(CC) $(CFLAGS) -o $(MAIN) $(OBJS)
+%.1: %.md
+	go-md2man -in $< -out $@
+	
+test: postmark tmp/ test.conf postmark.conf
+	@cat test.conf | ./postmark postmark.conf
 
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c $<  -o $@
-
-%.html: %.1 
-	groff -mandoc -Thtml $< > $@
+tmp/:
+	mkdir -p tmp/
 
 clean:
-	$(RM) *.o *~ $(MAIN) $(DOCS)
+	$(RM) -r tmp/
+	$(RM) *.o *~ $(TGTS) 
