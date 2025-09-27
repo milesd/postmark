@@ -635,7 +635,7 @@ void create_file_name(dest) char* dest;
     }
 
     if (subdirectories > 1) {
-        sprintf(conversion, "s%d%s", RND(subdirectories), SEPARATOR);
+        sprintf(conversion, "s%d%s", (int)(RND(subdirectories)), SEPARATOR);
         strcat(dest, conversion);
     }
 
@@ -1164,6 +1164,7 @@ char* argv[];
     printf("PostMark %s\n", PM_VERSION);
     if (read_config_file((argc == 2) ? argv[1] : ".pmrc", buffer, 1))
         while (cli_read_line(buffer, MAX_LINE) && cli_parse_line(buffer));
+    return 0;
 }
 
 /*
