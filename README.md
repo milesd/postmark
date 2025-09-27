@@ -39,7 +39,7 @@ AUTHORS
 
 Written by Jeffrey Katcher (katcher@netapp.com) under contract to Network Appliance.
 
-The manual page was written by Russell Coker (russell@coker.com.au),
+The original manual page was written by Russell Coker (russell@coker.com.au),
 for the Debian GNU/Linux system.
 
 Improved timers by [Andiry Xu](https://github.com/Andiry/postmark).

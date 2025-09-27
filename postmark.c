@@ -53,7 +53,7 @@ Versions:
 
 1.53 - Fixed error in report of deleted files (Thanks to Alf Wachsmann)
 
-1.54 - Enable accurate timing (Andiry Xu)
+1.54 - Changed timing mechanism for more accurate measurements (Andiry Xu)
 */
 
 #include <fcntl.h>
