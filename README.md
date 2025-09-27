@@ -1,16 +1,16 @@
-## PostMark
+# PostMark
 
 **postmark** - a file system benchmark based around small file operations
 
-# MANPAGE
 
 SYNOPSIS
 --------
 
 __postmark__ [config-file]
 
-DESCRIPTION
------------
+# DESCRIPTION
+
+[postmark.md](postmark.md) is the man page
 
 **postmark** is a benchmark that's based around small file operations similar to those used on large mail servers and news servers.
 
@@ -19,17 +19,19 @@ When **postmark** is run it gives a command-line interface to configure and ru
 The name of a text file containing commands may be specified on the command line.
 
 COMMANDS
---------
 
 The following **postmark** commands are available, either interactively or by the specified config file:
 
 **set** **size**
+
 :   Sets low and high bounds of files
 
 **set number**
+
 :   Sets number of simultaneous files
 
 **set seed**
+
 :   Sets seed for random number generator
 
 **set transactions**

@@ -1,115 +1,94 @@
-.TH "POSTMARK" "1" "2001-09-13" "russell@coker.com.au" "PostMark"
-.SH "NAME"
-postmark \- a file system benchmark based around small file operations.
+.nh
+.TH postmark 1 "May 2005" postmark "User Manual"
 
-.SH "SYNOPSIS"
-.B postmark
-.RI [config-file]
+.SH NAME
+\fBpostmark\fP \- a file system benchmark based around small file operations
 
-.SH "DESCRIPTION"
-This manual page documents briefly the
-.B postmark
-program.
-.P
-When
-.B postmark
-is run it gives a command\-line interface to configure and run tests.  The
-"help" command displays basic information on how to operate it.
-.P
-The name of a text file containing commands may be specified on the command
-line.
-.P
-The following 
-.B postmark
-commands are available, either interactively or by the specified config file:
+.SH SYNOPSIS
+\fBpostmark\fP [config-file]
 
-.BR set\ size
-.RS
+.SH DESCRIPTION
+\fBpostmark\fP is a benchmark that's based around small file operations similar to those used on large mail servers and news servers.
+
+.PP
+When \fBpostmark\fP is run it gives a command-line interface to configure and run tests. The "help" command displays basic information on how to operate it.
+
+.PP
+The name of a text file containing commands may be specified on the command line.
+
+.SH COMMANDS
+The following \fBpostmark\fP commands are available, either interactively or by the specified config file:
+.TP
+\fBset\fP \fBsize\fP
 Sets low and high bounds of files
 
-.RE
-.BR set\ number
-.RS
+.TP
+\fBset number\fP
 Sets number of simultaneous files
 
-.RE
-.BR set\ seed
-.RS
+.TP
+\fBset seed\fP
 Sets seed for random number generator
 
-.RE
-.BR set\ transactions
-.RS
+.TP
+\fBset transactions\fP
 Sets number of transactions
 
-.RE
-.BR set\ location
-.RS
+.TP
+\fBset location\fP
 Sets location of working files
 
-.RE
-.BR set\ subdirectories
-.RS
+.TP
+\fBset subdirectories\fP
 Sets number of subdirectories
 
-.RE
-.BR set\ read
-.RS
+.TP
+\fBset read\fP
 Sets read block size
 
-.RE
-.BR set\ write
-.RS
+.TP
+\fBset write\fP
 Sets write block size
 
-.RE
-.BR set\ buffering
-.RS
+.TP
+\fBset buffering\fP
 Sets usage of buffered I/O
 
-.RE
-.BR set\ bias\ read
-.RS
+.TP
+\fBset bias read\fP
 Sets the chance of choosing read over append
 
-.RE
-.BR set\ bias\ create
-.RS
+.TP
+\fBset bias create\fP
 Sets the chance of choosing create over delete
 
-.RE
-.BR set\ report
-.RS
+.TP
+\fBset report\fP
 Choose verbose or terse report format
 
-.RE
-.BR run
-.RS
+.TP
+\fBrun\fP
 Runs one iteration of benchmark
 
-.RE
-.BR load
-.RS
+.TP
+\fBload\fP
 Read configuration file
 
-.RE
-.BR show
-.RS
+.TP
+\fBshow\fP
 Displays current configuration
 
-.RE
-.BR help
-.RS
+.TP
+\fBhelp\fP
 Prints out available commands
 
-.RE
-.BR quit
-.RS
+.TP
+\fBquit\fP
 Exit program
-.RE
 
-.SH "AUTHOR"
-Written by Jeffrey Katcher <katcher@netapp.com> under contract to Network Appliance.
+.SH AUTHORS
+Written by Jeffrey Katcher (katcher@netapp.com) under contract to Network Appliance.
 
-This manual page was written by Russell Coker <russell@coker.com.au>,
-for the Debian GNU/Linux system (but may be used by others).
+.PP
+The manual page was written by Russell Coker (russell@coker.com.au),
+for the Debian GNU/Linux system.

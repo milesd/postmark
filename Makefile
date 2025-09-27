@@ -8,10 +8,8 @@ CC = gcc
 
 all: $(TGTS)
 
-# Combine postmark.md with everything after the MANPAGE header in README.md
-# assumes presence of go-md2man (i.e. brew install go-md2man)
-%.1: %.md README.md
-	@{ cat $< ; sed '1,/MANPAGE/d' < README.md;} | go-md2man -out $@
+%.1: %.md
+	go-md2man -in $< -out $@
 
 clean:
 	$(RM) *.o *~ $(TGTS)
