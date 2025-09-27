@@ -11,8 +11,8 @@ all: $(TGTS)
 %.1: %.md
 	go-md2man -in $< -out $@
 	
-test: postmark tmp/ 
-	@{ echo set location tmp/; echo run; } | ./postmark postmark.conf
+test: postmark tmp/ test.conf postmark.conf
+	@cat test.conf | ./postmark postmark.conf
 
 tmp/:
 	mkdir -p tmp/
