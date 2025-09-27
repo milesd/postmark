@@ -1,6 +1,5 @@
 .nh
 .TH postmark 1 "May 2005" postmark "User Manual"
-
 .SH NAME
 \fBpostmark\fP \- a file system benchmark based around small file operations
 
@@ -17,62 +16,14 @@ When \fBpostmark\fP is run it gives a command-line interface to configure and 
 The name of a text file containing commands may be specified on the command line.
 
 .SH COMMANDS
-The following \fBpostmark\fP commands are available, either interactively or by the specified config file:
+The following \fBpostmark\fP commands are available interactively.
 .TP
-\fBset\fP \fBsize\fP
-Sets low and high bounds of files
-
-.TP
-\fBset number\fP
-Sets number of simultaneous files
-
-.TP
-\fBset seed\fP
-Sets seed for random number generator
-
-.TP
-\fBset transactions\fP
-Sets number of transactions
-
-.TP
-\fBset location\fP
-Sets location of working files
-
-.TP
-\fBset subdirectories\fP
-Sets number of subdirectories
-
-.TP
-\fBset read\fP
-Sets read block size
-
-.TP
-\fBset write\fP
-Sets write block size
-
-.TP
-\fBset buffering\fP
-Sets usage of buffered I/O
-
-.TP
-\fBset bias read\fP
-Sets the chance of choosing read over append
-
-.TP
-\fBset bias create\fP
-Sets the chance of choosing create over delete
-
-.TP
-\fBset report\fP
-Choose verbose or terse report format
+\fBload\fP \fIFILE\fP
+Read configuration file from \fIFILE\fP\&.
 
 .TP
 \fBrun\fP
 Runs one iteration of benchmark
-
-.TP
-\fBload\fP
-Read configuration file
 
 .TP
 \fBshow\fP
@@ -85,6 +36,80 @@ Prints out available commands
 .TP
 \fBquit\fP
 Exit program
+
+.SH CONFIGURATION
+The following \fBpostmark\fP configuration settings are available, either interactively or by the specified config file:
+.TP
+\fBset\fP \fBsize\fP \fIMIN\fP \fIMAX\fP
+Sets low and high bounds of files in bytes.
+
+Defaults to \fB500 10000\fR\&.
+
+.TP
+\fBset number\fP \fINUM\fP
+Sets number of simultaneous files.
+
+Defaults to \fB500\fR\&.
+
+.TP
+\fBset seed\fP \fINUM\fP
+Sets seed for random number generator.
+
+Defaults to \fB42\fR\&.
+
+.TP
+\fBset transactions\fP \fINUM\fP
+Sets number of transactions.
+
+Defaults to \fB500\fR\&.
+
+.TP
+\fBset location\fP \fIDIR\fP
+Sets location of working files.
+
+Defaults to the present working directory.
+
+.TP
+\fBset subdirectories\fP \fINUM\fP
+Sets number of subdirectories.
+
+The default is to use a single working directory.
+
+.TP
+\fBset read\fP \fIBYTES\fP
+Sets read block size in bytes.
+
+The default is \fB512\fR\&.
+
+.TP
+\fBset write\fP \fIBYTES\fP
+Sets write block size in bytes.
+
+The default is \fB512\fR\&.
+
+.TP
+\fBset buffering\fP [true|false]
+Sets usage of buffered I/O.
+
+The default is \fBtrue\fR\&.
+
+.TP
+\fBset bias read\fP \fINUM\fP
+Sets the chance of choosing read over append.
+
+The default is \fB5\fR\&.
+
+.TP
+\fBset bias create\fP \fINUM\fP
+Sets the chance of choosing create over delete.
+
+The default is \fB5\fR\&.
+
+.TP
+\fBset report\fP [verbose|terse]
+Choose verbose or terse report format.
+
+The default is \fBverbose\fR\&.
 
 .SH AUTHORS
 Written by Jeffrey Katcher (katcher@netapp.com) under contract to Network Appliance.
